@@ -1,0 +1,361 @@
+
+# Advanced R programming chapter 13, Built-in function
+# sequence
+
+#  seq(): Create sequences
+#  sort(): sort a vector
+#  rev():  reverselements in object.
+#  str(): show the structure of object
+#  append(): merge objects together ( work vectors $ list)
+
+> q<-(1:10)
+> q
+[1]  1  2  3  4  5  6  7  8  9 10
+
+> seq(0, 10, by=2)
+[1]  0  2  4  6  8 10
+
+> seq(2, 10, by=2)
+[1]  2  4  6  8 10
+
+> v<- c(2, 5, 10, 30, 1, 20, 100)
+> v
+[1]   2   5  10  30   1  20 100
+
+# default shoring ascending
+> sort(v)
+[1]   1   2   5  10  20  30 100
+
+# Sorting Descinding
+> sort (v, decreasing = TRUE)
+[1] 100  30  20  10   5   2   1
+
+
+> char<- c('x', 'g', 'a', 'c', 'w')
+> sort(char, decreasing = TRUE)
+[1] "x" "w" "g" "c" "a"
+
+> sort(char)
+[1] "a" "c" "g" "w" "x"
+#Capital A or C have been sorted based on letter position but not Upper case comparing lower case.
+> sort(char)
+[1] "a" "A" "c" "C" "g" "w" "x"
+
+# reverse
+> v<- c(3, 4, 5, 6, 7, 2, 1, 20)
+> rev(v)
+[1] 20  1  2  7  6  5  4  3
+
+# very to figure out data type or column name or raws, either numeric or char
+# Here 32 rows, 11 Column, all of col are numeric
+> str(cars)
+'data.frame':	32 obs. of  11 variables:
+  $ mpg : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 .
+
+# to verify either vecor or numeric, double, or data.frame we can parameters that return True or False for function
+
+> v<- c(1:20)
+> v
+[1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+# checking Data Type by is
+
+> is(v)
+[1] "integer"             "double"              "numeric"             "vector"              "data.frameRowLabels"
+> is.vector(v)
+[1] TRUE
+> is.numeric(v)
+[1] TRUE
+> is.data.frame(v)
+[1] FALSE
+> is.data.frame(mtcars)
+[1] TRUE
+> l<-(letters)
+> l
+[1] "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"
+> is.vector(l)
+[1] TRUE
+> is.character(l)
+[1] TRUE
+> is.data.frame(l)
+[1] FALSE
+
+# Converting Data type by as.
+> v<- c(3, 5, 7, 9, 12, 14)
+> v
+[1]  3  5  7  9 12 14
+> is.vector(v)
+[1] TRUE
+> as.list(v)
+[[1]]
+[1] 3
+
+[[2]]
+[1] 5
+
+[[3]]
+[1] 7
+
+[[4]]
+[1] 9
+
+[[5]]
+[1] 12
+
+[[6]]
+[1] 14
+
+> as.matrix(v)
+[,1]
+[1,]    3
+[2,]    5
+[3,]    7
+[4,]    9
+[5,]   12
+[6,]   14
+
+# Apply function
+# random print between 1 and 10 with a difference of 1
+# sample just 1 random number between 1 and 10
+print(sample(x = 1:10,3))
+> print(sample(x = 1:10,3))
+[1] 3 8 4
+print(sample(x=1:10,1))
+> print(sample(x=1:10,1))
+[1] 10
+> print(sample(x=1:10,1))
+[1] 7
+print(sample(x=1:10,3))
+
+> print(sample(x=1:10,3))
+[1] 6 3 1
+> print(sample(x=1:10,3))
+[1] 1 4 3
+> print(sample(x=1:10,3))
+[1]  1  4 10
+
+> v<-c(1, 2)
+> addrandom<- function(x){
+  +     
+    +     ran<-sample(1:5,1)
+    +     return(x+ran)
+    + }
+print(addrandom(10))
+[1] 95
+> print(addrandom(20))
+[1] 95
+
+# Apply or lapply
+result<-lapply(v,addrandom)
+print(result)
+
+> result<-lapply(v, addrandom)
+> result
+[[1]]
+[1] 52
+
+[[2]]
+[1] 24
+
+[[3]]
+[1] 18
+
+[[4]]
+[1] 78
+
+[[5]]
+[1] 28
+# showing as vector for 1, 2, 3, 4, 5
+> result<-sapply(v,addrandom)
+> result
+[1] 80 98 71 95 34
+
+# apply a custom function to a vector that will allow us to pick a random sample from a vector:
+
+# vector # number of element is 3 in this vector
+v1 <- c(1,2,3)
+print(v1)
+
+# our custom function
+addrand <- function(x){
+  # Get a random number between 1 & 10
+  ran <-sample(x=1:10,1)
+  
+  # return x plus the random number
+  return(x+ran)
+}
+
+# lapply(), we are passing vector v=[1], [2], [3] and function addrand
+print(lapply(v,addrand))
+[[1]]
+[1] 11
+
+[[2]]
+[1] 7
+
+[[3]]
+[1] 7
+
+
+v1<-c(1,2,3)
+print(v1)
+# Anon func with lapply()
+lapply(v, function(a){a+sample(x=1:8,1)})
+result<-(a+sample(x=1:8,1))
+print(result)
+
+# adds two to every element
+> print(v1)
+[1] 1 2 3
+lapply(v1,function(x){x+2})
+[[1]]
+[1] 3
+
+[[2]]
+[1] 4
+
+choice <- function(num,option){
+  return(num+option)
+}
+
+choice(2,5)
+> choice(2,5)
+[1] 7
+
+# Uh oh! Forgot to add other arguments!
+v1<-c(1,2,3)
+lapply(v1,choice, option=5)
+# 1+5, 2+5, 3+5
+[[1]]
+[1] 6
+
+[[2]]
+[1] 7
+
+[[3]]
+[1] 8
+
+## I will come back
+
+############# Math Function with R
+
+# abs() computes the absulate value.
+# sum (): returns the sum of all values present in the input
+# mean(): computes the arithmatic mean.
+# round (): round values
+
+> abs(-4)
+[1] 4
+> abs(3)
+[1] 3
+> abs(0)
+[1] 0
+
+> v<-c(4, -5, -20)
+> abs(v)
+[1]  4  5 20
+
+> sum(v)
+# (4-5-20)
+[1] -21
+
+
+> v
+[1]   4  -5 -20
+> mean(v)
+[1] -7
+
+> v2<-(2.5465464564)
+> round(v2, 4)
+[1] 2.5465
+> round(v2, digits=1)
+[1] 2.5
+
+# all built in function with R
+
+search for r reference card
+
+# grepl
+# grep
+
+> line<-('Good morning, Lipi, did you decide who you are going to vote for')
+> line
+[1] "Good morning, Lipi, did you decide who you are going to vote for"
+> grep('Lipi', line)
+[1] 1
+> grep('good', line)
+integer(0)
+> grep('Good', line)
+[1] 1
+> grep('vote', line)
+[1] 1
+> grepl('vote', line)
+[1] TRUE
+> grepl('Lipi', line)
+[1] TRUE
+
+> v<-c("a", 'b', 'c', 'A,', 'b,', 'c', 'd', 'c', 'e', 'c')
+> v
+[1] "a"  "b"  "c"  "A," "b," "c"  "d"  "c"  "e"  "c" 
+> grepl(v)
+> grepl('c', v)
+# indentify element exist or not in the vector
+[1] FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE  TRUE FALSE  TRUE
+> grep('c', v)
+# grep identify the index of vectors of that specific element|
+
+[1]  3  6  8 10
+# upper case and lowder case are different from each other to filter out.
+
+> grep('A', v)
+[1] 4
+> grep('a', v)
+[1] 1
+
+#You can also convert character strings in R to a Date object using as.Date(). You'll need to make sure its in the correct format, or use % symbols that correlate with your given format:
+
+#--Code	Value
+#--%d	Day of the month (decimal number)
+#--%m	Month (decimal number)
+#--%b	Month (abbreviated)
+#--%B	Month (full name)
+#--%y	Year (2 digit)
+#--%Y	Year (4 digit)
+
+Sys.Date()
+# Set as a variable
+today <- Sys.Date()
+> print(today)
+[1] "2021-04-25"
+> class(today)
+[1] "Date"
+
+# Converting to Date format
+> as.Date("June, 01, 2002", format="%B, %d, %Y")
+[1] "2002-06-01"
+
+# you may have charac date
+> c<-'1990-01-01'
+> class(c)
+[1] "character"
+
+# convert to date format by as.date
+> my.date<-as.Date(c)
+> class(my.date)
+[1] "Date"
+
+# converting to date object
+> as.Date("Nov-04-1995")
+> my.date<-as.Date("Nov-04-1995", format= "%b-%d-%y")
+> class(my.date)
+[1] "Date"
+
+POSIXct
+as.POSIXct("11:02:03",format="%H:%M:%S")
+
+# as.POSIXlt converts a variety of data types to POSIXlt. It tries to be intelligent and do the sensible thing - in the case of character, it acts as a wrapper to strptime.
+
+# as.POSIXct converts a variety of data types to POSIXct. It also tries to be intelligent and do the sensible thing - in the case of character, it runs strptime first, then does the conversion from POSIXlt to POSIXct.
+
+> help(strptime)
+> as.POSIXct("11:02:03",format="%H:%M:%S")
+[1] "2021-04-25 11:02:03 PDT"

@@ -1,0 +1,417 @@
+
+
+# Data manipulation with R
+
+filter() (and slice())
+arrange()
+select() (and rename())
+distinct()
+mutate() (and transmute())
+summarise()
+sample_n() and sample_frac()
+
+# downloading Flight data for Example
+> library(nycflights13)
+> summary(flights)
+
+> head(flights)
+# A tibble: 6 x 19
+
+> str(flights)
+tibble[,19] [336,776 x 19] (S3: tbl_df/tbl/data.frame)
+$ year          : int [1:336776] 2013 2013 2013 2013 2013 2013 2013 2013 2013 2013 ...
+$ month         : int [1:336776] 1 1 1 1 1 1 1 1 1 1 ...
+
+# Notice how large the data frame is:
+> # Notice how large the data frame is:
+  > dim(flights)
+[1] 336776     19
+
+# Filter ():
+# filter() allows you to select a subset of rows in a data frame. The first argument is the name of the data frame. The second and subsequent arguments are the expressions that filter the data frame:
+  
+  For example, we can select all flights on November 3rd that were from American Airlines (AA) with:
+    
+head(filter(flights,month==11,day==3,carrier=='AA'))
+  
+# Using index : [row, ]
+  head(flights[flights$month == 11 & flights$day == 3 & flights$carrier == 'AA', ])
+
+# slice () # of rows
+slice(flights, 1:5)
+
+# arrange()
+arrange() works similarly to filter() except that instead of filtering or selecting rows, it reorders them. 
+# It takes a data frame, and a set of column names (or more complicated expressions) to order by. If you provide more than one column name, each additional column will be used to break ties in the values of preceding columns:
+  
+head(flights,year,month,day,air_time)
+head(arrange(flights,year,month,day,air_time))
+
+# Descending order by a column
+You can add desc() to arrange in descending order:
+  head(arrange(flights,desc(dep_delay)))
+  
+> names(flights)
+
+#select()
+# Often you work with large datasets with many columns but only a few are actually of interest to you.
+# select() allows you to rapidly zoom in on a useful subset using operations that usually only work on numeric variable positions:
+
+head(select(flights,carrier))
+# A tibble: 6 x 1
+carrier
+<chr>  
+  1 UA     
+2 UA     
+3 AA     
+4 B6     
+5 DL     
+6 UA    
+
+
+
+## rename()
+# You can use rename() to rename columns, note this is not "in-place" you'll need to reassign the renamed data structures.
+
+head(rename(flights,airline_car = carrier))
+year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time arr_delay airline_car flight tailnum
+<int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>     <dbl> <chr>        <int> <chr>  
+  1  2013     1     1      517            515         2      830            819        11 UA            1545 N14228 
+2  2013     1     1      533            529         4      850            830        20 UA            1714 N24211 
+3  2013     1     1      542            540         2      923            850        33 AA            1141 N619AA 
+
+names(flights)
+
+## distinct()
+# A common use of select() is to find the values of a set of variables. This is particularly useful in conjunction with the distinct() verb which only returns the unique values in a table.
+
+distinct(select(flights,carrier))
+
+> distinct(select(flights,carrier))
+# A tibble: 16 x 1
+carrier
+<chr>  
+  1 UA     
+2 AA     
+3 B6     
+4 DL     
+5 EV     
+6 MQ     
+7 US     
+8 WN     
+9 VX     
+10 FL     
+11 AS     
+12 9E     
+13 F9     
+14 HA     
+15 YV     
+16 OO
+
+## mutate()
+#  Besides selecting sets of existing columns, it's often useful to add new columns that are functions of existing columns. This is the job of mutate():
+# assign to new coloumn
+
+head(mutate(flights, new_col = arr_delay-dep_delay))
+names(flights)
+##        transmute()
+head(flights)
+head(mutate(flights, new_col = arr_delay-dep_delay))
+
+Use transmute if you only want the new columns:
+  
+x<-head(transmute(flights, new_col = arr_delay-dep_delay))
+x
+new_col
+<dbl>
+  1       9
+2      16
+3      31
+4     -17
+5     -19
+
+> head(transmute(flights, new_col = arr_delay-dep_delay))
+# A tibble: 6 x 1
+new_col
+<dbl>
+  1       9
+2      16
+3      31
+4     -17
+
+# summarise()
+You can use summarise() to quickly collapse data frames into single rows using functions that aggregate results. Remember to use na.rm=TRUE to remove NA values.
+library(nycflights13)
+head(flights$arr_time)
+> flights[, "arr_time"]
+# A tibble: 336,776 x 1
+arr_time
+<int>
+  1      830
+2      850
+3      923
+4     1004
+5      812
+6      740
+7      913
+8      709
+9      838
+10      753
+# ... with 336,766 more rows
+## aggregating and na value to 1 if any in air_time
+## Group By column name 
+summarise(flights,avg_air_time=mean(air_time,na.rm=TRUE))
+
+summarise(flights, total;_time=sum(air_time,na.rm=TRUE))
+
+install.packages('dplyr')
+install.packages('nycflights13',repos = 'http://cran.us.r-project.org')
+library(nycflights13)
+summary(flights)
+sample_n(flights,10)
+
+##sample_n() and sample_frac()
+##  You can use sample_n() and sample_frac() to take a random sample of rows: use sample_n() for a fixed number and sample_frac() for a fixed fraction.
+
+
+# .005% of the data
+sample_frac(flights,0.00005) # USE replace=TRUE for bootstrap sampling
+
+############## Pipe operator_________________________________________________
+
+# Nesting
+
+result<- arrange(sample_n(filter(df, mpg>20), size=5), desc(mpg))
+print(result)
+
+## too many operator:
+> result<- arrange(sample_n(filter(df, mpg>20), size=5), desc(mpg))
+> print(result)
+mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Lotus Europa  30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+Honda Civic   30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+Fiat X1-9     27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+Porsche 914-2 26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+Merc 240D     24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+
+# Using Multiple Assignment
+
+a<-filter(df, mpg>20)
+b<- sample_n(a, size=5)
+result<- arrange(b, desc(mpg))
+print(result)
+
+> print(result)
+mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Lotus Europa  30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+Honda Civic   30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+Fiat X1-9     27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+Porsche 914-2 26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+Merc 240D     24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+
+# pipe operator
+# Data %>% op1 %>% op2 %>% op3
+
+result<-df %>% filter(mpg>20) %>% sample_n(size = 5) %>% arrange(desc(mpg))
+print (result)
+
+> print (result)
+mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Lotus Europa  30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+Honda Civic   30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+Fiat X1-9     27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+Porsche 914-2 26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+Merc 240D     24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+
+## Exercises___________________
+Dplyr Exercises
+Perform the following operations using only the dplyr library. We will be reviewing the following operations:
+
+  filter() (and slice())
+arrange()
+select() (and rename())
+distinct()
+mutate() (and transmute())
+summarise()
+sample_n() and sample_frac()
+
+library(dplyr)
+We will use the mtcars dataframe for this exercise!
+
+#  1. Return rows of cars that have an mpg value greater than 20 and 6 cylinders.
+head(mtcars)
+result<-filter(mtcars, mpg>20), (cyl==6))
+print (result)
+
+filter(mtcars,mpg>20,cyl==6)
+> filter(mtcars,mpg>20,cyl==6)
+mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4      21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag  21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+
+#2 Reorder the Data Frame by cyl first, then by descending wt.
+
+head(arrange(mtcars,cyl,desc(wt)))
+
+> head(arrange(mtcars,cyl,desc(wt)))
+mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Merc 240D     24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+Merc 230      22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+Volvo 142E    21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
+Toyota Corona 21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+Datsun 710    22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+Fiat 128      32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+
+# 3 Select the columns mpg and hp
+
+head(select(mtcars,mpg,hp))
+> head(select(mtcars,mpg,hp))
+mpg  hp
+Mazda RX4         21.0 110
+Mazda RX4 Wag     21.0 110
+Datsun 710        22.8  93
+Hornet 4 Drive    21.4 110
+Hornet Sportabout 18.7 175
+Valiant           18.1 105
+
+# 4 Select the distinct values of the gear column.
+distinct(select(mtcars,gear))
+
+> distinct(select(mtcars,gear))
+gear
+Mazda RX4         4
+Hornet 4 Drive    3
+Porsche 914-2     5
+
+# using pipe operator
+mtcars %>% select(gear) %>% distinct()
+> mtcars %>% select(gear) %>% distinct()
+gear
+Mazda RX4         4
+Hornet 4 Drive    3
+Porsche 914-2     5
+
+
+# 5-Create a new column called "Performance" which is calculated by hp divided by wt.
+
+head(mutate(mtcars,Performance=hp/wt))
+> head(mutate(mtcars,Performance=hp/wt))
+mpg cyl disp  hp drat    wt  qsec vs am gear carb Performance
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4    41.98473
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4    38.26087
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1    40.08621
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1    34.21462
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2    50.87209
+Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1    30.34682
+
+# 6 Find the mean mpg value using dplyr.
+summarise(mtcars,avg_mpg=mean(mpg))
+
+> summarise(mtcars,avg_mpg=mean(mpg))
+avg_mpg
+1 20.09062
+# 7 Use pipe operators to get the mean hp value for cars with 6 cylinders.
+
+mtcars %>% filter(cyl==6) %>% summarise(avg_hp = mean(hp))
+
+> mtcars %>% filter(cyl==6) %>% summarise(avg_hp = mean(hp))
+avg_hp
+1 122.2857
+
+
+#-----------------------------------------------Guide to use Tidyr----------------------------------------
+
+install.packages("tidyr")
+install.packages("data.table")
+library(tidyr)
+library(data.table)
+
+Using tidyr
+We'll cover some of the most useful functions in tidyr. Including the following:
+
+gather()
+spread()
+separate()
+unite()
+
+Example Data Set¶
+Let's create some fake data that needs to be cleaned using tidyr
+
+comp <- c(1,1,1,2,2,2,3,3,3)
+yr <- c(1998,1999,2000,1998,1999,2000,1998,1999,2000)
+q1 <- runif(9, min=0, max=100)
+q2 <- runif(9, min=0, max=100)
+q3 <- runif(9, min=0, max=100)
+q4 <- runif(9, min=0, max=100)
+
+df <- data.frame(comp=comp,year=yr,Qtr1 = q1,Qtr2 = q2,Qtr3 = q3,Qtr4 = q4)
+> df
+comp year     Qtr1     Qtr2     Qtr3      Qtr4
+1    1 1998 95.81596 34.27808 92.69179 92.100693
+2    1 1999 25.51668 98.85287 61.22806 18.292104
+3    1 2000 84.85606 12.65158 51.44954  5.958486
+4    2 1998 58.31657 99.60035 39.80257 52.507802
+5    2 1999 30.60043 59.86349 44.21723 40.425170
+6    2 2000 96.42324 47.95445 15.07117  2.563054
+7    3 1998 22.34693 69.09330 56.66346 68.543709
+8    3 1999 82.58270 69.46432 20.22977 52.758934
+9    3 2000 62.72307 86.87521 48.08106 11.055144
+
+# Using Pipe Operator
+head(df %>% gather(Quarter,Revenue,Qtr1:Qtr4))
+# key is Quarter, and Revenue is pair value
+> head(df %>% gather(Quarter,Revenue,Qtr1:Qtr4))
+comp year Quarter  Revenue
+1    1 1998    Qtr1 95.81596
+2    1 1999    Qtr1 25.51668
+3    1 2000    Qtr1 84.85606
+4    2 1998    Qtr1 58.31657
+5    2 1999    Qtr1 30.60043
+6    2 2000    Qtr1 96.42324
+
+# With just the function
+head(gather(df,Quarter,Revenue,Qtr1:Qtr4))
+comp year Quarter  Revenue
+1    1 1998    Qtr1 95.81596
+2    1 1999    Qtr1 25.51668
+3    1 2000    Qtr1 84.85606
+4    2 1998    Qtr1 58.31657
+5    2 1999    Qtr1 30.60043
+6    2 2000    Qtr1 96.42324
+
+stocks <- data.frame(
+  time = as.Date('2009-01-01') + 0:9,
+  X = rnorm(10, 0, 1),
+  Y = rnorm(10, 0, 2),
+  Z = rnorm(10, 0, 4)
+)
+stocks
+> stocks
+time           X          Y          Z
+1  2009-01-01 -0.94130535  1.2515692 -3.5572290
+2  2009-01-02  0.21527013 -5.5266090 -4.8925662
+3  2009-01-03  0.82095619  0.2753414  0.6739761
+4  2009-01-04  0.69010056  0.1837131 -1.0593638
+5  2009-01-05  0.28903233 -2.6668204  0.7398551
+6  2009-01-06  0.08090602 -0.5488848 -3.0252969
+7  2009-01-07 -0.06763530  3.4750501  3.1848351
+8  2009-01-08 -2.22362527  0.2168025 -1.3716866
+9  2009-01-09 -2.00117894  2.6643953 -1.0897935
+10 2009-01-10  0.05159900 -1.0476242  1.9938091
+
+
+stocksm <- stocks %>% gather(stock, price, -time)
+stocksm %>% spread(stock, price)
+> stocksm %>% spread(stock, price)
+time           X          Y          Z
+1  2009-01-01 -0.94130535  1.2515692 -3.5572290
+2  2009-01-02  0.21527013 -5.5266090 -4.8925662
+3  2009-01-03  0.82095619  0.2753414  0.6739761
+4  2009-01-04  0.69010056  0.1837131 -1.0593638
+5  2009-01-05  0.28903233 -2.6668204  0.7398551
+6  2009-01-06  0.08090602 -0.5488848 -3.0252969
+7  2009-01-07 -0.06763530  3.4750501  3.1848351
+8  2009-01-08 -2.22362527  0.2168025 -1.3716866
+9  2009-01-09 -2.00117894  2.6643953 -1.0897935
+10 2009-01-10  0.05159900 -1.0476242  1.9938091
