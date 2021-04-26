@@ -1,0 +1,571 @@
+
+# Creating Data Frames.
+# Importing and Exporting Data.
+# Getting Information about Data Frames
+# Referencing Cells
+# Referencing Rows
+# Referencing Columns
+# Adding Rows
+# Adding Columns.
+# Setting Column Names.
+
+# built in Data Frame
+
+# Creating Empty Data Frame
+
+empty<--data.frame()
+c1<- 1:10
+l
+empty<--data.frame()
+> letters
+[1] "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"
+
+c2<- letters[1:10]
+
+df <- data.frame(col.name1=c1, col.name2=c2)
+> df
+col.name1 col.name2
+1          1         a
+2          2         b
+3          3         c
+4          4         d
+5          5         e
+6          6         f
+7          7         g
+8          8         h
+9          9         i
+10        10         j
+
+# Exporting & Importing csv file.
+
+# To Read csv file
+d2<-read.csv( 'Some_file.csv')
+
+# To write csv file
+> write.csv(df, file='saved_df.csv')
+> df3<-read.csv('saved_df.csv')
+> df3
+X col.name1 col.name2
+1   1         1         a
+2   2         2         b
+3   3         3         c
+4   4         4         d
+5   5         5         e
+6   6         6         f
+7   7         7         g
+8   8         8         h
+9   9         9         i
+10 10        10         j
+
+# Number of rows or col or column name
+> nrow(df)
+[1] 10
+> ncol(df)
+[1] 2
+> colnames(df)
+[1] "col.name1" "col.name2"
+> rownames(df)
+[1] "1"  "2"  "3"  "4"  "5"  "6"  "7"  "8"  "9"  "10"
+
+
+> str(df)
+'data.frame':	10 obs. of  2 variables:
+$ col.name1: int  1 2 3 4 5 6 7 8 9 10
+$ col.name2: chr  "a" "b" "c" "d" ...
+
+> summary(df)
+col.name1      col.name2        
+Min.   : 1.00   Length:10         
+1st Qu.: 3.25   Class :character  
+Median : 5.50   Mode  :character  
+Mean   : 5.50                     
+3rd Qu.: 7.75                     
+Max.   :10.00
+# referencing single cell and add the value
+> df[[5,2]]
+[1] "e"
+> df[[5, 'col.name2']]
+[1] "e"
+> df[[5,1]]
+[1] 5
+> df[[2, 'col.name1']]<-200
+> df
+col.name1 col.name2
+1          1         a
+2        200         b
+3          3         c
+4          4         d
+5          5         e
+6          6         f
+7          7         g
+8          8         h
+9          9         i
+10        10         j
+> df[, 1]
+[1]   1 200   3   4   5   6   7   8   9  10
+> df[1,]
+col.name1 col.name2
+1         1         a
+
+
+
+> data()
+data()
+> state.x77[,'Population']
+> state.x77[, 1]
+state.x77[1:10,'Population', 'Icome']
+
+> state.x77[1:10,c('Population', 'Income')]
+Population Income
+Alabama           3615   3624
+Alaska             365   6315
+Arizona           2212   4530
+Arkansas          2110   3378
+California       21198   5114
+Colorado          2541   4884
+Connecticut       3100   5348
+Delaware           579   4809
+Florida           8277   4815
+Georgia           4931   4091
+
+
+> state.x77[1:10,'Income']
+Alabama      Alaska     Arizona    Arkansas  California    Colorado Connecticut    Delaware     Florida     Georgia 
+3624        6315        4530        3378        5114        4884        5348        4809        4815        4091
+
+> days <- c('mon','tue','wed','thu','fri')
+> temp <- c(22.2,21,23,24.3,25)
+> rain <- c(TRUE, TRUE, FALSE, FALSE, TRUE)
+> 
+  > # Pass in the vectors:
+  > df <- data.frame(days,temp,rain)
+> df
+days temp  rain
+1  mon 22.2  TRUE
+2  tue 21.0  TRUE
+3  wed 23.0 FALSE
+4  thu 24.3 FALSE
+5  fri 25.0  TRUE
+> df$rain
+[1]  TRUE  TRUE FALSE FALSE  TRUE
+> df$days
+[1] "mon" "tue" "wed" "thu" "fri"
+> df['rain']
+rain
+1  TRUE
+2  TRUE
+3 FALSE
+4 FALSE
+5  TRUE
+> subset(df,subset=rain==FALSE)
+days temp  rain
+3  wed 23.0 FALSE
+4  thu 24.3 FALSE
+sorted.temp <- order(df['temp'])
+
+> sorted.temp <- order(df['temp'])
+> df[sorted.temp,]
+days temp  rain
+2  tue 21.0  TRUE
+1  mon 22.2  TRUE
+3  wed 23.0 FALSE
+4  thu 24.3 FALSE
+5  fri 25.0  TRUE
+# Ok, so we are just asking for those index elements in that order (by default ascending,
+# we can pass a negative sign to do descending order):
+desc.temp <- order(-df['temp'])
+df[desc.temp,]
+> df[desc.temp,]
+days temp  rain
+5  fri 25.0  TRUE
+4  thu 24.3 FALSE
+3  wed 23.0 FALSE
+
+-------------------------data Frame operation 1
+> c1<- (1:10)
+> letters
+[1] "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"
+> c<-letters[1:10]
+> c
+[1] "a" "b" "c" "d" "e" "f" "g" "h" "i" "j"
+> df<-data.frame(colname1=c1, colname2=c)
+> df
+colname1 colname2
+1         1        a
+2         2        b
+3         3        c
+4         4        d
+5         5        e
+6         6        f
+7         7        g
+8         8        h
+9         9        i
+10       10        j
+
+# to read a CSV file
+d2<-read.csv('somefle.csv')
+
+# Creating DataFrame
+d2 <- read.csv('some.file.name.csv')
+# 4 different ways extracting element of victors out of df
+> mtcars[, 1]
+[1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4 17.3 15.2 10.4 10.4 14.7 32.4 30.4 33.9 21.5 15.5 15.2
+[24] 13.3 19.2 27.3 26.0 30.4 15.8 19.7 15.0 21.4
+> mtcars[,'mpg']
+[1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4 17.3 15.2 10.4 10.4 14.7 32.4 30.4 33.9 21.5 15.5 15.2
+[24] 13.3 19.2 27.3 26.0 30.4 15.8 19.7 15.0 21.4
+> mtcars$mpg
+[1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4 17.3 15.2 10.4 10.4 14.7 32.4 30.4 33.9 21.5 15.5 15.2
+[24] 13.3 19.2 27.3 26.0 30.4 15.8 19.7 15.0 21.4
+> mtcars[['mpg']]
+[1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4 17.3 15.2 10.4 10.4 14.7 32.4 30.4 33.9 21.5 15.5 15.2
+[24] 13.3 19.2 27.3 26.0 30.4 15.8 19.7 15.0 21.4
+
+# extracting data frame from df with column
+> mtcars['mpg']
+mpg
+Mazda RX4           21.0
+Mazda RX4 Wag       21.0
+Datsun 710          22.8
+Hornet 4 Drive      21.4
+Hornet Sportabout   18.7
+Valiant             18.1
+Duster 360          14.3
+Merc 240D           24.4
+Merc 230            22.8
+Merc 280            19.2
+Merc 280C           17.8
+Merc 450SE          16.4
+Merc 450SL          17.3
+Merc 450SLC         15.2
+Cadillac Fleetwood  10.4
+Lincoln Continental 10.4
+Chrysler Imperial   14.7
+Fiat 128            32.4
+Honda Civic         30.4
+Toyota Corolla      33.9
+Toyota Corona       21.5
+Dodge Challenger    15.5
+AMC Javelin         15.2
+Camaro Z28          13.3
+Pontiac Firebird    19.2
+Fiat X1-9           27.3
+Porsche 914-2       26.0
+Lotus Europa        30.4
+Ford Pantera L      15.8
+Ferrari Dino        19.7
+Maserati Bora       15.0
+Volvo 142E          21.4
+> mtcars[1]
+
+# extracting multiple columns
+> head(mtcars[c('mpg', 'cyl')])
+mpg cyl
+Mazda RX4         21.0   6
+Mazda RX4 Wag     21.0   6
+Datsun 710        22.8   4
+Hornet 4 Drive    21.4   6
+Hornet Sportabout 18.7   8
+Valiant           18.1   6
+# adding a new rows
+> df2<- data.frame(col.name1=300, col.name2='new')
+> dfnew<- rbind(df,df2)
+> dfnew
+col.name1 col.name2
+1          1         a
+2        200         b
+3          3         c
+4          4         d
+5          5         e
+6          6         f
+7          7         g
+8          8         h
+9          9         i
+10        10         j
+11       300       new
+# adding new column 'newcol'
+> df$newcol<-2*df$col.name1
+> df$newcol
+[1]   2 400   6   8  10  12  14  16  18  20
+> df
+col.name1 col.name2 newcol
+1          1         a      2
+2        200         b    400
+3          3         c      6
+4          4         d      8
+5          5         e     10
+6          6         f     12
+7          7         g     14
+8          8         h     16
+9          9         i     18
+10        10         j     20
+> df$newcol.copy1<- df$newcol
+> df
+col.name1 col.name2 newcol newcol.copy1
+1          1         a      2            2
+2        200         b    400          400
+3          3         c      6            6
+4          4         d      8            8
+5          5         e     10           10
+6          6         f     12           12
+7          7         g     14           14
+8          8         h     16           16
+9          9         i     18           18
+10        10         j     20           20
+> df$newcol.copy2<-df$newcol
+> head(df)
+col.name1 col.name2 newcol newcol.copy1 newcol.copy2
+1         1         a      2            2            2
+2       200         b    400          400          400
+3         3         c      6            6            6
+4         4         d      8            8            8
+5         5         e     10           10           10
+6         6         f     12           12           12
+> colnames(df)
+[1] "col.name1"    "col.name2"    "newcol"       "newcol.copy1" "newcol.copy2"
+> colnames(df)<-c('colname1', 'colname2', 'colname3', 'colname4', 'colname4')
+> df
+colname1 colname2 colname3 colname4 colname4
+1         1        a        2        2        2
+2       200        b      400      400      400
+3         3        c        6        6        6
+4         4        d        8        8        8
+5         5        e       10       10       10
+6         6        f       12       12       12
+7         7        g       14       14       14
+8         8        h       16       16       16
+9         9        i       18       18       18
+
+> colnames(df)[1]<-'newcolname1'
+> df
+newcolname1 colname2 colname3 colname4 colname4
+1            1        a        2        2        2
+2          200        b      400      400      400
+3            3        c        6        6        6
+4            4        d        8        8        8
+5            5        e       10       10       10
+6            6        f       12       12       12
+7            7        g       14       14       14
+8            8        h       16       16       16
+9            9        i       18       18       18
+10          10        j       20       20       20
+# Selecting Multiple Rows
+> head(df)
+newcolname1 colname2 colname3 colname4 colname4
+1           1        a        2        2        2
+2         200        b      400      400      400
+3           3        c        6        6        6
+4           4        d        8        8        8
+5           5        e       10       10       10
+6           6        f       12       12       12
+> head(df,6)
+newcolname1 colname2 colname3 colname4 colname4
+1           1        a        2        2        2
+2         200        b      400      400      400
+3           3        c        6        6        6
+4           4        d        8        8        8
+5           5        e       10       10       10
+6           6        f       12       12       12
+# filering mpg over 25 values
+mtcars[mtcars$mpg> 25, ]
+mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Fiat 128       32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+Honda Civic    30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+Toyota Corolla 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+Porsche 914-2  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+
+> mtcars[(mtcars$mpg> 20) & (mtcars$cyl==6), ]
+mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4      21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag  21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+
+# only specific columns
+mtcars[(mtcars$mpg> 20) & (mtcars$cyl==6), c('mpg', 'cyl', 'hp') ]
+mpg cyl  hp
+Mazda RX4      21.0   6 110
+Mazda RX4 Wag  21.0   6 110
+Hornet 4 Drive 21.4   6 110
+
+> subset(mtcars, mpg>20 & cyl==6)
+mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4      21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag  21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+
+# multiple columns
+
+> head(mtcars[, c(1,2,3)])
+mpg cyl disp
+Mazda RX4         21.0   6  160
+Mazda RX4 Wag     21.0   6  160
+Datsun 710        22.8   4  108
+Hornet 4 Drive    21.4   6  258
+Hornet Sportabout 18.7   8  360
+Valiant           18.1   6  225
+
+OR
+> head(mtcars[, c('mpg', 'cyl', 'disp')])
+mpg cyl disp
+Mazda RX4         21.0   6  160
+Mazda RX4 Wag     21.0   6  160
+Datsun 710        22.8   4  108
+Hornet 4 Drive    21.4   6  258
+Hornet Sportabout 18.7   8  360
+Valiant           18.1   6  225
+
+# Dealing with missing or na data
+is.na(df)
+> any(is.na(df))
+[1] FALSE
+
+# individual column
+> any(is.na(mtcars$mpg))
+[1] FALSE
+# replacing na to 0
+> df[is.na(df)]<-0
+
+# replacing individual column with 0
+mtcars$mpg[is.na(mtcars$mpg)]<--0
+
+-------------Exercise------------------------------------------------------------------------
+  
+#  Ex 1: Recreate the following dataframe by creating vectors and using the data.frame function:
+  
+
+  > name<-c('Same', 'Frank', 'Amy')
+> Name<-c('Same', 'Frank', 'Amy')
+> Age<-c(22, 25, 26)
+> Weight<- c(150, 165, 120 )
+> Sex<- c('M', 'M', 'F')
+> df<-data.frame(row.names=Name, Age, Weight, Sex)
+> df
+Age Weight Sex
+Same   22    150   M
+Frank  25    165   M
+Amy    26    120   F
+> rownames(df)<-c('Same1', 'Frank1', 'Amy1')
+> df
+Age Weight Sex
+Same1   22    150   M
+Frank1  25    165   M
+Amy1    26    120   F
+
+# Ex 2: Check if mtcars is a dataframe using is.data.frame()
+
+> is.data.frame(mtcars)
+[1] TRUE
+
+Ex 3: Use as.data.frame() to convert a matrix into a dataframe:
+  
+  > mat<-matrix(1:25, nrow = 5)
+> mat
+[,1] [,2] [,3] [,4] [,5]
+[1,]    1    6   11   16   21
+[2,]    2    7   12   17   22
+[3,]    3    8   13   18   23
+[4,]    4    9   14   19   24
+[5,]    5   10   15   20   25
+> as.data.frame(mat)
+V1 V2 V3 V4 V5
+1  1  6 11 16 21
+2  2  7 12 17 22
+3  3  8 13 18 23
+4  4  9 14 19 24
+5  5 10 15 20 25
+# 
+Ex 4: Set the built-in data frame mtcars as a variable df. We'll use this df variable for the rest of the exercises.
+
+df<-mtcars
+Ex 5: Display the first 6 rows of df
+head(df)
+> head(df, 2)
+              mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4      21   6  160 110  3.9 2.620 16.46  0  1    4    4
+Mazda RX4 Wag  21   6  160 110  3.9 2.875 17.02  0  1    4    4
+
+ df$mpg
+ [1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4 17.3 15.2 10.4 10.4 14.7 32.4 30.4 33.9 21.5 15.5 15.2
+[24] 13.3 19.2 27.3 26.0 30.4 15.8 19.7 15.0 21.4
+> df[1,]
+          mpg cyl disp  hp drat   wt  qsec vs am gear carb
+# Ex 6: What is the average mpg value for all the cars?
+> mean(df$mpg)
+[1] 20.09062
+
+# Ex 7: Select the rows where all cars have 6 cylinders (cyl column)
+> df[df$cyl==6,]
+                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4      21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+Merc 280C      17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+Ferrari Dino   19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+or
+> subset(df, cyl==6)
+
+# Ex 8: Select the columns am,gear, and carb.
+
+> df[ , c('am', 'gear', 'carb')]
+                    am gear carb
+Mazda RX4            1    4    4
+Mazda RX4 Wag        1    4    4
+Datsun 710           1    4    1
+Hornet 4 Drive       0    3    1
+Hornet Sportabout    0    3    2
+
+
+> df[ , c(9, 10, 11)]
+                    am gear carb
+Mazda RX4            1    4    4
+Mazda RX4 Wag        1    4    4
+Datsun 710           1    4    1
+Hornet 4 Drive       0    3    1
+
+# Ex 10: Your performance column will have several decimal place precision. 
+#Figure out how to use round() (check help(round)) to reduce this accuracy to only 2 decimal place
+> names(df)
+ [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"   "am"   "gear" "carb"
+ 
+ > df$performance<-df$hp/df$wt
+> head(df)
+                   mpg cyl disp  hp drat    wt  qsec vs am gear carb performance
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4    41.98473
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4    38.26087
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1    40.08621
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1    34.21462
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2    50.87209
+Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1    30.34682
+
+Ex 10: What is the average mpg for cars that have more than 100 hp AND a wt value of more than 2.5.
+> df$performance<-round(df$performance, digits= 2)
+> df
+                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb performance
+Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4       41.98
+Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4       38.26
+Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1       40.09
+Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1       34.21
+Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2       50.87
+Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1       30.35
+
+ > subset(df, hp>100 & wt>2.5)$mpg
+ [1] 21.0 21.0 21.4 18.7 18.1 14.3 19.2 17.8 16.4 17.3 15.2 10.4 10.4 14.7 15.5 15.2 13.3 19.2 15.8 19.7 15.0 21.4
+> mean(subset(df, hp>100 & wt>2.5)$mpg)
+[1] 16.86364
+# Using bracket notation
+> df[df$hp>100 & df$wt>2.5, ]$mpg
+ [1] 21.0 21.0 21.4 18.7 18.1 14.3 19.2 17.8 16.4 17.3 15.2 10.4 10.4 14.7 15.5 15.2 13.3 19.2 15.8 19.7 15.0 21.4
+> mean(df[df$hp>100 & df$wt>2.5, ]$mpg)
+[1] 16.86364
+
+Ex 11: What is the mpg of the Hornet Sportabout?
+
+> df['Hornet Sportabout', ]
+                   mpg cyl disp  hp drat   wt  qsec vs am gear carb performance
+Hornet Sportabout 18.7   8  360 175 3.15 3.44 17.02  0  0    3    2       50.87
+> df['Hornet Sportabout', ]$mpg
+[1] 18.7
